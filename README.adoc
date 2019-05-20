@@ -1,8 +1,13 @@
 = Cloud Pipelines Jenkins
 
+image:https://circleci.com/gh/Cobrijani/jenkins/tree/master.svg?style=svg["CircleCI", link="https://circleci.com/gh/Cobrijani/jenkins/tree/master"]
+
 This project contains setup for Jenkins that creates jobs and pipelines
 via Jenkins Job DSL or Jenkinsfile for your projects. The pipelines and
 jobs use the scripts defined in
 https://github.com/CloudPipelines/scripts[Cloud Pipelines Scripts] repo.
 
 You can check out the `docs` folder for the documentation. The deployed docs are available https://cloudpipelines.github.io/jenkins/[here]
+
+This represents custom implementation from 
+https://github.com/CloudPipelines/jenkins[Jenkins Cloud Pipelines]

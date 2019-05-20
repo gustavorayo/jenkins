@@ -38,7 +38,7 @@ dependencies {
 // docker
 
 ext {
-	dockerImagePrefix = "cloudpipelines"
+	dockerImagePrefix = "cobrijani"
 	dockerImageName = "${dockerImagePrefix}/${project.rootProject.name}"
 }
 

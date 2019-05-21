@@ -41,8 +41,9 @@ workflows:
     jobs:
       - build:
           filters:
-            ignore:
-              - gh-pages
+            branches:
+              ignore:
+                - gh-pages
       - hold:
           type: approval
           requires: 

@@ -7,9 +7,6 @@ jobs:
       _JAVA_OPTIONS: "-Xms512m -Xmx1024m"
       GRADLE_OPTS: '-Dorg.gradle.jvmargs="-Xmx1024m -XX:+HeapDumpOnOutOfMemoryError"'
       TERM: dumb
-    branches:
-      ignore:
-        - gh-pages # list of branches to ignore
     steps:
       - setup_remote_docker
       - checkout
@@ -42,7 +39,10 @@ workflows:
   version: 2
   build-and-deploy:
     jobs:
-      - build
+      - build:
+          filters:
+            ignore:
+              - gh-pages
       - hold:
           type: approval
           requires: 

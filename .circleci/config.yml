@@ -26,6 +26,19 @@ jobs:
       - store_test_results:
           path: /junit/
           destination: testartifacts
+  push-image:
+    docker:
+      - image: springcloud/pipeline-base
+    environment:
+      _JAVA_OPTIONS: "-Xms512m -Xmx1024m"
+      GRADLE_OPTS: '-Dorg.gradle.jvmargs="-Xmx1024m -XX:+HeapDumpOnOutOfMemoryError"'
+      TERM: dumb
+    steps:
+      - setup_remote_docker
+      - checkout
+      - run:
+          name: "Pushing docker image"
+          command: ./gradlew clean build -PreleaseDocker --stacktrace
   deploy:
     machine:
       enabled: true
@@ -44,10 +57,17 @@ workflows:
             branches:
               ignore:
                 - gh-pages
+      - push-image:
+          requires:
+            - build
+          filters:
+            branches:
+              only: master
       - hold:
           type: approval
           requires: 
            - build
+           - push-image
       - deploy:
           requires:
             - hold

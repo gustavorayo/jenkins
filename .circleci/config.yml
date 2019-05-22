@@ -46,7 +46,8 @@ jobs:
       - run:
           name: Deploy Over SSH
           command: |
-            ssh $SSH_USER@$SSH_HOST "./cops/jenkins/start.sh"    
+            ssh $SSH_USER@$SSH_HOST "./jenkins/demo/stop.sh"
+            ssh $SSH_USER@$SSH_HOST "./jenkins/demo/start.sh" -key ~/.ssh/id_rsa Cobrijani
 
 workflows:
   version: 2

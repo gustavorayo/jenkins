@@ -47,8 +47,8 @@ jobs:
           name: Deploy Over SSH
           command: |
             ssh $SSH_USER@$SSH_HOST "cd ~/jenkins && git pull"
-            ssh $SSH_USER@$SSH_HOST "./jenkins/demo/stop.sh"
-            ssh $SSH_USER@$SSH_HOST "./jenkins/demo/start.sh" -key ~/.ssh/id_rsa Cobrijani
+            ssh $SSH_USER@$SSH_HOST "cd ~/jenkins/demo && ./stop.sh"
+            ssh $SSH_USER@$SSH_HOST "cd ~/jenkins/demo && ./start.sh" -key ~/.ssh/id_rsa Cobrijani
 
 workflows:
   version: 2

@@ -1,18 +1,25 @@
 version: "2"
 services:
   jenkins:
-    image: cobrijani/jenkins
+    build:
+      context: .
+      args:
+        gituser: "${PIPELINE_GIT_USERNAME}"
+        gitpass: "${PIPELINE_GIT_PASSWORD}"
+        gitsshkey: "${PIPELINE_GIT_SSH_KEY}"
+        dockerRegistryOrg: "${DOCKER_REGISTRY_ORGANIZATION}"
+        dockerRegistryUser: "${DOCKER_REGISTRY_USERNAME}"
+        dockerRegistryPass: "${DOCKER_REGISTRY_PASSWORD}"
+        dockerRegistryEmail: "${DOCKER_REGISTRY_EMAIL}"
     environment:
       FORKED_ORG: "${FORKED_ORG}"
       EXTERNAL_IP: "${EXTERNAL_IP}"
-      JENKINS_OPTS: "--prefix=/jenkins"
     ports:
       - "50000:50000"
       - "8080:8080"
-    networks:
-      - proxy
     volumes:
-      - jenkins_home:/var/jenkins_home
+      # The /var/jenkins_* paths might not work for Docker machine...
+      - ~/jenkins_home:/var/jenkins_home
       - ~/jenkins_root:/root/
       - /var/run/docker.sock:/var/run/docker.sock
     links:
@@ -23,15 +30,3 @@ services:
       dockerfile: Dockerfile-artifactory
     ports:
       - "8081:8081"
-    networks:
-      - proxy
-
-
-networks:
-  proxy:
-    external:
-      name: proxy
-volumes:
-  jenkins_home:
-    external:
-      name: jenkins_home

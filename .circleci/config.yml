@@ -26,7 +26,7 @@ jobs:
       - store_test_results:
           path: /junit/
           destination: testartifacts
-  push-image:
+  package:
     docker:
       - image: springcloud/pipeline-base
     environment:
@@ -58,7 +58,8 @@ workflows:
             branches:
               ignore:
                 - gh-pages
-      - push-image:
+                - master
+      - package:
           requires:
             - build
           filters:
@@ -68,7 +69,7 @@ workflows:
           type: approval
           requires:
            - build
-           - push-image
+           - package
       - deploy:
           requires:
             - hold

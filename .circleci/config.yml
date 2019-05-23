@@ -47,7 +47,8 @@ jobs:
           name: Deploy Over SSH
           command: |
             ssh $SSH_USER@$SSH_HOST "cd ~/cops && git pull"
-            ssh $SSH_USER@$SSH_HOST "cd ~/cops && docker-compose rm -s"
+            ssh $SSH_USER@$SSH_HOST "cd ~/cops && docker-compose stop"
+            ssh $SSH_USER@$SSH_HOST "cd ~/cops && docker-compose rm -f"
             ssh $SSH_USER@$SSH_HOST "cd ~/cops/jenkins && docker-compose up -d --force-recreate"
 
 workflows:

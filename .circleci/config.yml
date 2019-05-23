@@ -46,9 +46,8 @@ jobs:
       - run:
           name: Deploy Over SSH
           command: |
-            ssh $SSH_USER@$SSH_HOST "cd ~/jenkins && git pull"
-            ssh $SSH_USER@$SSH_HOST "cd ~/jenkins/demo && ./stop.sh"
-            ssh $SSH_USER@$SSH_HOST "cd ~/jenkins/demo && ./start.sh" -key ~/.ssh/id_rsa Cobrijani
+            ssh $SSH_USER@$SSH_HOST "cd ~/cops && git pull"
+            ssh $SSH_USER@$SSH_HOST "cd ~/cops/jenkins && docker-compose up -d --force-recreate"
 
 workflows:
   version: 2
@@ -67,7 +66,7 @@ workflows:
               only: master
       - hold:
           type: approval
-          requires: 
+          requires:
            - build
            - push-image
       - deploy:

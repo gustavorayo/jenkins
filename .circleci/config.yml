@@ -7,9 +7,6 @@ jobs:
       _JAVA_OPTIONS: "-Xms512m -Xmx1024m"
       GRADLE_OPTS: '-Dorg.gradle.jvmargs="-Xmx1024m -XX:+HeapDumpOnOutOfMemoryError"'
       TERM: dumb
-    branches:
-      ignore:
-        - gh-pages # list of branches to ignore
     steps:
       - setup_remote_docker
       - checkout
@@ -29,3 +26,53 @@ jobs:
       - store_test_results:
           path: /junit/
           destination: testartifacts
+  package:
+    docker:
+      - image: springcloud/pipeline-base
+    environment:
+      _JAVA_OPTIONS: "-Xms512m -Xmx1024m"
+      GRADLE_OPTS: '-Dorg.gradle.jvmargs="-Xmx1024m -XX:+HeapDumpOnOutOfMemoryError"'
+      TERM: dumb
+    steps:
+      - setup_remote_docker
+      - checkout
+      - run:
+          name: "Pushing docker image"
+          command: ./gradlew clean build -PreleaseDocker --stacktrace
+  deploy:
+    machine:
+      enabled: true
+    steps:
+      - run:
+          name: Deploy Over SSH
+          command: |
+            ssh $SSH_USER@$SSH_HOST "cd ~/cops && git pull"
+            ssh $SSH_USER@$SSH_HOST "cd ~/cops/jenkins && docker-compose stop"
+            ssh $SSH_USER@$SSH_HOST "cd ~/cops/jenkins && docker-compose rm -f"
+            ssh $SSH_USER@$SSH_HOST "cd ~/cops/jenkins && docker-compose pull"
+            ssh $SSH_USER@$SSH_HOST "cd ~/cops/jenkins && docker-compose up -d --force-recreate"
+
+workflows:
+  version: 2
+  build-and-deploy:
+    jobs:
+      - build:
+          filters:
+            branches:
+              ignore:
+                - gh-pages
+                - master
+      - package:
+          filters:
+            branches:
+              only: master
+      - hold:
+          type: approval
+          requires:
+           - package
+      - deploy:
+          requires:
+            - hold
+          filters:
+            branches:
+              only: master
